@@ -2,8 +2,11 @@ const express = require('express');
 const { Success } = require("../../middlewares/response.handler")
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    Success(req, res, "Hello World", 200)
+const Controller = require('./user.controller');
+
+router.get("/", async (req, res) => {
+    const lista = await Controller.listUsers();
+    Success(req, res, lista, 200)
 }
 );
 
