@@ -1,9 +1,9 @@
 const express = require('express');
-
+const { Success } = require("../../middlewares/response.handler")
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    res.send("Hello World");
+    Success(req, res, "Hello World", 200)
 }
 );
 
