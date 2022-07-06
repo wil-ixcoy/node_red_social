@@ -2,12 +2,23 @@ const express = require('express');
 const { Success } = require("../../middlewares/response.handler")
 const router = express.Router();
 
-const Controller = require('./user.controller');
+const Controller = require('./index.js');
 
-router.get("/", async (req, res) => {
-    const lista = await Controller.listUsers();
-    Success(req, res, lista, 200)
-}
-);
+router.get("/", async (req, res, next) => {
+    try {
+        const lista = await Controller.findAll();
+        Success(req, res, lista, 200)
+    } catch (error) {
+        next(error);
+    }
+});
+router.get("/:id", async (req, res, next) => {
+    try {
+        const user = await Controller.findOne(req.params.id);
+        Success(req, res, user, 200)
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = router;

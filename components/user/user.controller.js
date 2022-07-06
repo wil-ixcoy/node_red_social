@@ -1,9 +1,19 @@
-const store = require("../../store/dummy");
 const Tabla = 'users';
-async function listUsers() {
-    return store.findAll(Tabla);
-}
 
-module.exports = {
-    listUsers
+module.exports = function (injectedStore) {
+    let store = injectedStore;
+    if (!store) {
+        store = require('../../store/dummy');
+    }
+
+    async function findAll() {
+        return store.list(Tabla);
+    }
+    async function findOne(id) {
+        return store.getOne(Tabla, id);
+    }
+    return {
+        findAll,
+        findOne
+    };
 }
