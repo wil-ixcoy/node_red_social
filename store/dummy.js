@@ -23,22 +23,31 @@ async function upsert(tabla, data) {
     console.log(database);
 }
 
-async function list(table) {
-    return database[table];
+async function list(tabla) {
+    return database[tabla] || [];
 }
 
-async function getOne(table, id) {
-    let collection = await this.list(table);
+async function getOne(tabla, id) {
+    let collection = await this.list(tabla);
     return collection.find(item => item.id === id) || null;
 }
-async function update(table, id, data) {
-    database[table].push(data);
+async function update(tabla, id, data) {
+    database[tabla].push(data);
 }
-async function remove(table, id) { return true }
+async function remove(tabla, id) { return true }
+
+async function query(tabla, q) {
+    let collection = await this.list(tabla);
+    let keys = Object.keys(q);
+    let key = keys[0];
+    return collection.filter(item => item[key] === q[key]) || null;
+
+}
 module.exports = {
     upsert,
     list,
     getOne,
     update,
-    remove
+    remove,
+    query
 }

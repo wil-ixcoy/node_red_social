@@ -18,8 +18,8 @@ module.exports = function (injectedStore) {
         } else {
             user.id = Math.floor((Math.random() * 10000));
         }
-        let newUser = await store.upsert(Tabla, user);
-        if (data.password || data.email) {
+        await store.upsert(Tabla, user);
+        if (data.password && data.email) {
             await auth.create({
                 id: user.id,
                 email: user.email,
@@ -27,7 +27,7 @@ module.exports = function (injectedStore) {
 
             })
         }
-        return newUser;
+        return user;
     }
 
     async function findAll() {
@@ -36,6 +36,7 @@ module.exports = function (injectedStore) {
     async function findOne(id) {
         return store.getOne(Tabla, id);
     }
+
     return {
         create,
         findAll,

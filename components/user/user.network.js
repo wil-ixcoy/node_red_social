@@ -1,5 +1,4 @@
 const express = require('express');
-const { Success } = require("../../middlewares/response.handler")
 const router = express.Router();
 
 const Controller = require('./index.js');
@@ -8,7 +7,7 @@ router.post("/", async (req, res, next) => {
     try {
         const data = req.body;
         const newUser = await Controller.create(data);
-        Success(req, res, newUser, 200)
+        res.json(newUser)
     } catch (error) {
         next(error);
     }
@@ -16,7 +15,7 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
     try {
         const lista = await Controller.findAll();
-        Success(req, res, lista, 200)
+        res.json(lista)
     } catch (error) {
         next(error);
     }
@@ -24,7 +23,7 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
     try {
         const user = await Controller.findOne(req.params.id);
-        Success(req, res, user, 200)
+        res.json(user)
     } catch (error) {
         next(error);
     }
