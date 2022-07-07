@@ -11,22 +11,23 @@ module.exports = function (injectedStore) {
         const user = {
             name: data.name,
             username: data.username,
+            email: data.email,
         };
         if (data.id) {
             user.id = data.id;
         } else {
             user.id = Math.floor((Math.random() * 10000));
         }
-
-        if (data.password || data.username) {
+        let newUser = await store.upsert(Tabla, user);
+        if (data.password || data.email) {
             await auth.create({
                 id: user.id,
-                username: user.username,
+                email: user.email,
                 password: data.password
 
             })
         }
-        return user;
+        return newUser;
     }
 
     async function findAll() {

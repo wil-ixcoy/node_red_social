@@ -10,8 +10,8 @@ module.exports = function (injectedStore) {
         const authData = {
             id: data.id,
         }
-        if (data.username) {
-            authData.username = data.username;
+        if (data.email) {
+            authData.email = data.email;
         }
         if (data.password) {
             authData.password = data.password;
