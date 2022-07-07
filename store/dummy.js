@@ -13,7 +13,15 @@ const database = {
     ],
 
 };
-async function create(data) { }
+async function upsert(tabla, data) {
+    if (!database[tabla]) {
+        database[tabla] = [];
+    }
+
+    database[tabla].push(data);
+
+    console.log(database);
+}
 
 async function list(table) {
     return database[table];
@@ -28,7 +36,7 @@ async function update(table, id, data) {
 }
 async function remove(table, id) { return true }
 module.exports = {
-    create,
+    upsert,
     list,
     getOne,
     update,
