@@ -1,5 +1,5 @@
 function errorHandler(err, req, res, next) {
-    res.staus(500).json({
+    res.status(500).json({
         error: err.message,
         stack: err.stack
     });

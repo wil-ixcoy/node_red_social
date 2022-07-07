@@ -1,6 +1,8 @@
 const Tabla = 'auth';
 const { config } = require('../../config');
+const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken")
+const boom = require('@hapi/boom');
 module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
@@ -15,19 +17,21 @@ module.exports = function (injectedStore) {
             authData.email = data.email;
         }
         if (data.password) {
-            authData.password = data.password;
+            authData.password = await bcrypt.hash(data.password, 10);
         }
         return store.upsert(Tabla, authData);
     }
     async function login(email, password) {
         const user = await store.query(Tabla, { email: email })
-        if (user && user[0] && user[0].password === password) {
+        if(!user[0]){
+            throw boom.unauthorized('No existe el usuario')
+        }
+        let isPassword = await bcrypt.compare(password, user[0].password);
+        if (!isPassword) {
+            throw boom.unauthorized('Contraseña incorrecta')
+        }
             const token = await tokenJWT(user[0]);
             return token;
-        }
-        else {
-            return null;
-        }
     }
 
     async function tokenJWT(user) {
@@ -35,9 +39,7 @@ module.exports = function (injectedStore) {
             sub: user.id,
         };
         const token = jwt.sign(payload, config.secret_jwt);
-        return {
-            user, token
-        };
+        return {user, token};
     }
     return {
         create,
