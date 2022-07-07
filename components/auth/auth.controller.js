@@ -1,5 +1,6 @@
 const Tabla = 'auth';
-
+const { config } = require('../../config');
+const jwt = require("jsonwebtoken")
 module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
@@ -21,11 +22,22 @@ module.exports = function (injectedStore) {
     async function login(email, password) {
         const user = await store.query(Tabla, { email: email })
         if (user && user[0] && user[0].password === password) {
-            return user[0];
+            const token = await tokenJWT(user[0]);
+            return token;
         }
         else {
             return null;
         }
+    }
+
+    async function tokenJWT(user) {
+        const payload = {
+            sub: user.id,
+        };
+        const token = jwt.sign(payload, config.secret_jwt);
+        return {
+            user, token
+        };
     }
     return {
         create,
