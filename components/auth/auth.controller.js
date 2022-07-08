@@ -23,23 +23,24 @@ module.exports = function (injectedStore) {
     }
     async function login(email, password) {
         const user = await store.query(Tabla, { email: email })
-        if(!user[0]){
+        if (!user[0]) {
             throw boom.unauthorized('No existe el usuario')
         }
         let isPassword = await bcrypt.compare(password, user[0].password);
         if (!isPassword) {
             throw boom.unauthorized('Contraseña incorrecta')
         }
-            const token = await tokenJWT(user[0]);
-            return token;
+        const token = await tokenJWT(user[0]);
+        return token;
     }
 
     async function tokenJWT(user) {
         const payload = {
             sub: user.id,
+            role: user.role,
         };
         const token = jwt.sign(payload, config.secret_jwt);
-        return {user, token};
+        return { user, token };
     }
     return {
         create,

@@ -4,7 +4,7 @@ const user = require('./components/user/user.network');
 const auth = require('./components/auth/auth.network');
 const { config } = require('./config');
 const { errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
-
+require('./utils/index');
 app.use(express.json());
 
 app.use('/api/users', user);

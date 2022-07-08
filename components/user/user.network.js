@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
+const passport = require('passport');
 const Controller = require('./index.js');
-
+const { checkRoles } = require('../../middlewares/auth.handler');
 router.post("/", async (req, res, next) => {
     try {
         const data = req.body;
@@ -28,5 +28,15 @@ router.get("/:id", async (req, res, next) => {
         next(error);
     }
 });
+router.patch("/:id",
+    passport.authenticate('jwt', { session: false }),
+    checkRoles("users"), async (req, res, next) => {
+        try {
+            const user = await Controller.update(req.params.id, req.body);
+            res.json(user)
+        } catch (error) {
+            next(error);
+        }
+    });
 
 module.exports = router;

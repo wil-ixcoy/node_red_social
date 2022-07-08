@@ -1,6 +1,7 @@
 const Tabla = 'users';
 /* solo se llama auth y automaticamente usa el index.js */
 const auth = require('../auth');
+const boom = require('@hapi/boom');
 module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
@@ -12,6 +13,7 @@ module.exports = function (injectedStore) {
             name: data.name,
             username: data.username,
             email: data.email,
+            role: "user",
         };
         if (data.id) {
             user.id = data.id;
@@ -36,10 +38,26 @@ module.exports = function (injectedStore) {
     async function findOne(id) {
         return store.getOne(Tabla, id);
     }
+    async function update(id, data) {
+        const user = await store.getOne(Tabla, id);
+        if (!user) {
+            throw boom.notFound('No existe el usuario');
+        }
+        const updatedUser = await store.upsert(Tabla, {
+            id: user.id,
+            name: data.name || user.name,
+            username: data.username || user.username,
+            email: data.email || user.email,
+        });
+        return updatedUser;
+    }
+
+
 
     return {
         create,
         findAll,
-        findOne
+        findOne,
+        update
     };
 }
