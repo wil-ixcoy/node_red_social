@@ -25,7 +25,8 @@ module.exports = function (injectedStore) {
             await auth.create({
                 id: user.id,
                 email: user.email,
-                password: data.password
+                password: data.password, 
+                role: 'user'
 
             })
         }

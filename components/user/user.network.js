@@ -30,7 +30,7 @@ router.get("/:id", async (req, res, next) => {
 });
 router.patch("/:id",
     passport.authenticate('jwt', { session: false }),
-    checkRoles("users"), async (req, res, next) => {
+    checkRoles("user"), async (req, res, next) => {
         try {
             const user = await Controller.update(req.params.id, req.body);
             res.json(user)

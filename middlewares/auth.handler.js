@@ -1,7 +1,7 @@
 const boom = require('@hapi/boom');
 function checkRoles(...roles) {
     return function (req, res, next) {
-        const user = req.body;
+        const user = req.user;
         if (roles.includes(user.role)) {
             next();
         } else {

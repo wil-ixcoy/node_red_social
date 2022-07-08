@@ -19,6 +19,9 @@ module.exports = function (injectedStore) {
         if (data.password) {
             authData.password = await bcrypt.hash(data.password, 10);
         }
+        if (data.role) {
+            authData.role = data.role;
+        }
         return store.upsert(Tabla, authData);
     }
     async function login(email, password) {
@@ -35,6 +38,7 @@ module.exports = function (injectedStore) {
     }
 
     async function tokenJWT(user) {
+        console.log(user)
         const payload = {
             sub: user.id,
             role: user.role,
