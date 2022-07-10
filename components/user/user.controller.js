@@ -9,28 +9,29 @@ module.exports = function (injectedStore) {
     }
 
     async function create(data) {
-        const user = {
-            name: data.name,
-            username: data.username,
-            email: data.email,
-            role: "user",
-        };
-        if (data.id) {
-            user.id = data.id;
-        } else {
-            user.id = Math.floor((Math.random() * 10000));
-        }
-        await store.upsert(Tabla, user);
-        if (data.password && data.email) {
-            await auth.create({
-                id: user.id,
-                email: user.email,
-                password: data.password, 
-                role: 'user'
+        try {
+            const user = {
+                name: data.name,
+                username: data.username,
+                email: data.email,
+                role: "user",
+            };
+            await store.insert(Tabla, user);
+            let userCreated = await store.query(Tabla, { email: user.email });
+            if (data.password && data.email) {
+                await auth.create({
+                    id: userCreated[0].id,
+                    email: user.email,
+                    password: data.password,
+                    role: 'user'
 
-            })
+                })
+            }
+            return userCreated[0];
+
+        } catch (err) {
+            return err;
         }
-        return user;
     }
 
     async function findAll() {
@@ -40,17 +41,20 @@ module.exports = function (injectedStore) {
         return store.getOne(Tabla, id);
     }
     async function update(id, data) {
-        const user = await store.getOne(Tabla, id);
-        if (!user) {
-            throw boom.notFound('No existe el usuario');
+        if (data.role) {
+            throw boom.badRequest('No se puede cambiar el rol')
+        } else if (data.email) {
+            await store.update(Tabla, id, { email: data.email });
+            let userUpdated = await store.query(Tabla, { email: data.email });
+            await auth.update(userUpdated[0].id, userUpdated[0].email);
+            return userUpdated[0];
         }
-        const updatedUser = await store.upsert(Tabla, {
-            id: user.id,
-            name: data.name || user.name,
-            username: data.username || user.username,
-            email: data.email || user.email,
-        });
-        return updatedUser;
+        else {
+            await store.update(Tabla, id, data);
+            let userUpdated = await store.query(Tabla, { id: id });
+            console.log(userUpdated)
+            return userUpdated[0];
+        }
     }
 
 

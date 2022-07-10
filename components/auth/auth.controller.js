@@ -10,19 +10,17 @@ module.exports = function (injectedStore) {
     }
 
     async function create(data) {
-        const authData = {
-            id: data.id,
-        }
-        if (data.email) {
+        try {
+            let authData = {};
+            authData.id = data.id;
             authData.email = data.email;
-        }
-        if (data.password) {
             authData.password = await bcrypt.hash(data.password, 10);
-        }
-        if (data.role) {
             authData.role = data.role;
+
+            return await store.insert(Tabla, authData);
+        } catch (err) {
+            return err;
         }
-        return store.upsert(Tabla, authData);
     }
     async function login(email, password) {
         const user = await store.query(Tabla, { email: email })
@@ -46,8 +44,13 @@ module.exports = function (injectedStore) {
         const token = jwt.sign(payload, config.secret_jwt);
         return { user, token };
     }
+
+    async function update(id, newEmail) {
+        await store.update(Tabla, id, { email: newEmail });
+    }
     return {
         create,
-        login
+        login,
+        update,
     };
 }
