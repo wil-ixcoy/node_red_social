@@ -33,11 +33,11 @@ handlerConnection();
 
 async function list(table) {
     return new Promise((resolve, reject) => {
-        conection.query(`SELECT * FROM ${table}`, (err, rows) => {
+        conection.query(`SELECT * FROM ${table}`, (err, data) => {
             if (err) {
                 reject(err);
             } else {
-                resolve(rows);
+                resolve(data);
             }
         }
         );
@@ -46,18 +46,19 @@ async function list(table) {
 }
 async function getOne(table, id) {
     return new Promise((resolve, reject) => {
-        conection.query(`SELECT * FROM ${table} WHERE id = ?`, [id], (err, rows) => {
+        conection.query(`SELECT * FROM ${table} WHERE id = ?`, [id], (err, data) => {
             if (err) {
                 reject(err);
                 /* lanzar un error si no hay datos y cambiar el tipo de funcion */
             } else {
-                resolve(rows[0]);
+                resolve(data[0]);
             }
         }
         );
     }
     );
 }
+
 async function insert(table, data) {
     return new Promise((resolve, reject) => {
         conection.query(`INSERT INTO ${table} SET ?`, data, (err, rows) => {
