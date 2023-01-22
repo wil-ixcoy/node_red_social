@@ -49,6 +49,7 @@ async function getOne(table, id) {
         conection.query(`SELECT * FROM ${table} WHERE id = ?`, [id], (err, rows) => {
             if (err) {
                 reject(err);
+                /* lanzar un error si no hay datos y cambiar el tipo de funcion */
             } else {
                 resolve(rows[0]);
             }

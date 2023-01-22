@@ -37,9 +37,14 @@ module.exports = function (injectedStore) {
     async function findAll() {
         return store.list(Tabla);
     }
+
+    
     async function findOne(id) {
+        /* agregar error si no esta logueado */
         return store.getOne(Tabla, id);
     }
+
+
     async function update(id, data) {
         if (data.role) {
             throw boom.badRequest('No se puede cambiar el rol')
