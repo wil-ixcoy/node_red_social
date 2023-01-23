@@ -80,7 +80,9 @@ module.exports = function (injectedStore) {
 
   async function remove(id) {
     await store.remove("users", id);
-    return await store.remove("auth", id);
+     await store.remove("auth", id);
+     let msg = "Usuario eliminado";
+     return msg;
   }
 
   return {

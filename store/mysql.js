@@ -79,9 +79,7 @@ async function update(table, id, data) {
         (err, rows) => {
           if (err) {
             reject(err);
-          } else if (!rows.length) {
-            reject(err);
-          } else {
+          }  else {
             resolve(rows);
           }
         }
@@ -94,8 +92,6 @@ async function remove(table, id) {
     conection.query(`DELETE FROM ${table} WHERE id = ?`, [id], (err, rows) => {
       if (err) {
         reject(err);
-      } else if (!rows.length) {
-        reject(boom.badRequest("El usuario que intentaar no existe"));
       } else {
         resolve(rows);
       }
