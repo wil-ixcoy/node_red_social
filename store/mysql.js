@@ -68,21 +68,17 @@ async function insert(table, data) {
 }
 async function update(table, id, data) {
   return new Promise((resolve, reject) => {
-    if (data.id) {
-      reject(boom.badRequest("No se puede actualizar el id"));
-    } else {
-      connection.query(
-        `UPDATE ${table} SET ? WHERE id = ?`,
-        [data, id],
-        (err, rows) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(rows);
-          }
+    connection.query(
+      `UPDATE ${table} SET ? WHERE id = ?`,
+      [data, id],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
         }
-      );
-    }
+      }
+    );
   });
 }
 async function remove(table, id) {

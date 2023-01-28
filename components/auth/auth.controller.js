@@ -3,27 +3,26 @@ const { config } = require('../../config');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken")
 const boom = require('@hapi/boom');
-module.exports = function (injectedStore) {
-    let store = injectedStore;
-    if (!store) {
-        store = require('../../store/dummy');
-    }
+const Store = require("../../store/mysql");
 
-    async function create(data) {
+
+class AuthController{
+    async  create(data) {
         try {
             let authData = {};
             authData.id = data.id;
             authData.email = data.email;
             authData.password = await bcrypt.hash(data.password, 10);
             authData.role = data.role;
+            authData.created_at = data.created_at;
 
-            return await store.insert(Tabla, authData);
+            return await Store.insert(Tabla, authData);
         } catch (err) {
             return err;
         }
     }
-    async function login(email, password) {
-        const user = await store.query(Tabla, { email: email })
+    async  login(email, password) {
+        const user = await Store.query(Tabla, { email: email })
         if (!user[0]) {
             throw boom.unauthorized('No existe el usuario')
         }
@@ -35,7 +34,7 @@ module.exports = function (injectedStore) {
         return token;
     }
 
-    async function tokenJWT(user) {
+    async  tokenJWT(user) {
         console.log(user)
         const payload = {
             sub: user.id,
@@ -45,12 +44,9 @@ module.exports = function (injectedStore) {
         return { user, token };
     }
 
-    async function update(id, newEmail) {
-        await store.update(Tabla, id, { email: newEmail });
+    async  update(id, newEmail) {
+        await Store.update(Tabla, id, { email: newEmail });
     }
-    return {
-        create,
-        login,
-        update,
-    };
 }
+
+module.exports = AuthController;

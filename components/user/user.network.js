@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require("passport");
 const userController = require("./user.controller");
 const { checkRoles } = require("../../middlewares/auth.handler");
-const UserController = require("./user.controller");
 
 const service = new userController();
 
