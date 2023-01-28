@@ -1,36 +1,32 @@
-const mysql = require("mysql");
+const { createPool } = require("mysql2");
 const boom = require("@hapi/boom");
 const { config } = require("../config");
 
 const DATABASE_URL = config.mysql_url;
+const ser = config.servidor;
+const user = config.usuario;
+const pd = config.password;
+const bd = config.bd;
 
-let conection;
-
-let handlerConnection = () => {
-  conection = mysql.createConnection(DATABASE_URL);
-  conection.connect((err) => {
-    if (err) {
-      console.log(err);
-      setTimeout(handlerConnection, 1000);
-    } else {
-      console.log("Connected to database");
-    }
-  });
-  conection.on("error", (err) => {
-    console.log(err);
-    if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      handlerConnection();
-    } else {
-      throw err;
-    }
-  });
+const dbconf = {
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "red_social",
+  port: 3308,
 };
 
-handlerConnection();
+let connection;
 
+function connectDB() {
+  connection = createPool(dbconf);
+  console.log("DB mysql Connected! no problem");
+}
+
+connectDB();
 async function list(table) {
   return new Promise((resolve, reject) => {
-    conection.query(`SELECT * FROM ${table}`, (err, rows) => {
+    connection.query(`SELECT * FROM ${table}`, (err, rows) => {
       if (err) {
         reject(err);
       } else if (rows.length <= 0) {
@@ -43,7 +39,7 @@ async function list(table) {
 }
 async function getOne(table, id) {
   return new Promise((resolve, reject) => {
-    conection.query(
+    connection.query(
       `SELECT * FROM ${table} WHERE id = ?`,
       [id],
       (err, rows) => {
@@ -59,7 +55,7 @@ async function getOne(table, id) {
 
 async function insert(table, data) {
   return new Promise((resolve, reject) => {
-    conection.query(`INSERT INTO ${table} SET ?`, data, (err, rows) => {
+    connection.query(`INSERT INTO ${table} SET ?`, data, (err, rows) => {
       if (err) {
         return reject(boom.badRequest("Ha sucedido un error"));
       } else {
@@ -73,13 +69,13 @@ async function update(table, id, data) {
     if (data.id) {
       reject(boom.badRequest("No se puede actualizar el id"));
     } else {
-      conection.query(
+      connection.query(
         `UPDATE ${table} SET ? WHERE id = ?`,
         [data, id],
         (err, rows) => {
           if (err) {
             reject(err);
-          }  else {
+          } else {
             resolve(rows);
           }
         }
@@ -89,7 +85,7 @@ async function update(table, id, data) {
 }
 async function remove(table, id) {
   return new Promise((resolve, reject) => {
-    conection.query(`DELETE FROM ${table} WHERE id = ?`, [id], (err, rows) => {
+    connection.query(`DELETE FROM ${table} WHERE id = ?`, [id], (err, rows) => {
       if (err) {
         reject(err);
       } else {
@@ -100,7 +96,7 @@ async function remove(table, id) {
 }
 async function query(table, q) {
   return new Promise((resolve, reject) => {
-    conection.query(`SELECT * FROM ${table} WHERE ?`, q, (err, rows) => {
+    connection.query(`SELECT * FROM ${table} WHERE ?`, q, (err, rows) => {
       if (err) {
         reject(err);
       } else {

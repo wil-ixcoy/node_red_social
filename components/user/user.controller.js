@@ -39,13 +39,9 @@ module.exports = function (injectedStore) {
   async function findAll() {
     try {
       let users = await store.list(Tabla);
-      if (users == []) {
-        throw boom.notFound("No hay usuarios registrados");
-      } else {
-        return users;
-      }
+      return users;
     } catch (e) {
-      throw boom.badRequest("Ha ocurrido un error");
+      console.log(e)
     }
   }
 

@@ -141,4 +141,9 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
+# database cache
+mysql
+mysql_data
+postgres_data
+
 # End of https://www.toptal.com/developers/gitignore/api/node
