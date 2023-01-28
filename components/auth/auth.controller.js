@@ -30,7 +30,7 @@ class AuthController{
         if (!isPassword) {
             throw boom.unauthorized('Contraseña incorrecta')
         }
-        const token = await tokenJWT(user[0]);
+        const token = await this.tokenJWT(user[0]);
         return token;
     }
 
