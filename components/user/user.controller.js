@@ -1,91 +1,46 @@
 const Tabla = "users";
 /* solo se llama auth y automaticamente usa el index.js */
-const auth = require("../auth");
-const boom = require("@hapi/boom");
-module.exports = function (injectedStore) {
-  let store = injectedStore;
-  if (!store) {
-    store = require("../../store/dummy");
-  }
+/* const AuthService = require("../auth");
+ */const boom = require("@hapi/boom");
+const Store = require("../../store/mysql");
 
-  async function create(data) {
+
+class UserController {
+
+  async create(data) {
     try {
       const user = {
         name: data.name,
         username: data.username,
         email: data.email,
         role: "user",
+        created_at: new Date()
       };
-      await store.insert(Tabla, user);
-      let userCreated = await store.query(Tabla, { email: user.email });
-      if (data.password && data.email) {
-        await auth.create({
-          id: userCreated[0].id,
-          email: user.email,
-          password: data.password,
-          role: "user",
-        });
-      }
-      return userCreated[0];
+     let userCreated = await Store.insert(Tabla, user);
+     console.log(userCreated);
+      return userCreated;
     } catch (err) {
-      if (err.sqlMessage.includes("Duplicate entry")) {
-        throw boom.conflict("El email ya fue registrado");
-      } else {
-        throw boom.badRequest("Ha sucedido un error");
-      }
+      console.log(err)
     }
   }
 
-  async function findAll() {
-    try {
-      let users = await store.list(Tabla);
-      return users;
-    } catch (e) {
-      console.log(e)
+  async findAll() {
+  let  data =await Store.list(Tabla)
+  return data;
+  }
+  async findOne(id) {
+    let user = await Store.getOne(Tabla,id);
+    if(user != undefined){
+      return user
+    }else{
+      throw boom.notFound("El usuario que buscas no existe")
     }
   }
+  async update() {}
 
-  async function findOne(id) {
-    try {
-      let user = await store.getOne(Tabla, id);
-      if (user === undefined) {
-        throw boom.notFound("El usuario no existe");
-      } else {
-        return user;
-      }
-    } catch (e) {
-      throw boom.badRequest("Ha ocurrido un error");
-    }
+  async remove(id) {
+    let check = await  this.findOne(id);
+    return await Store.remove(Tabla,id)
   }
-
-  async function update(id, data) {
-    if (data.role) {
-      throw boom.badRequest("No se puede cambiar el rol");
-    } else if (data.email) {
-      await store.update(Tabla, id, { email: data.email });
-      let userUpdated = await store.query(Tabla, { email: data.email });
-      await auth.update(userUpdated[0].id, userUpdated[0].email);
-      return userUpdated[0];
-    } else {
-      await store.update(Tabla, id, data);
-      let userUpdated = await store.query(Tabla, { id: id });
-      console.log(userUpdated);
-      return userUpdated[0];
-    }
-  }
-
-  async function remove(id) {
-    await store.remove("users", id);
-     await store.remove("auth", id);
-     let msg = "Usuario eliminado";
-     return msg;
-  }
-
-  return {
-    create,
-    findAll,
-    findOne,
-    update,
-    remove,
-  };
-};
+}
+module.exports = UserController;

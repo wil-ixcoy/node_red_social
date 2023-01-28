@@ -55,11 +55,13 @@ async function getOne(table, id) {
 
 async function insert(table, data) {
   return new Promise((resolve, reject) => {
-    connection.query(`INSERT INTO ${table} SET ?`, data, (err, rows) => {
+    connection.query(`INSERT INTO ${table} SET ?`, data, async (err, rows) => {
       if (err) {
         return reject(boom.badRequest("Ha sucedido un error"));
       } else {
-        return resolve(rows);
+        let id = rows.insertId;
+        let newData = await getOne(table, id);
+        return resolve(newData);
       }
     });
   });
@@ -89,7 +91,7 @@ async function remove(table, id) {
       if (err) {
         reject(err);
       } else {
-        resolve(rows);
+        resolve("Eliminado");
       }
     });
   });
