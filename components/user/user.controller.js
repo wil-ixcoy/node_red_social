@@ -8,27 +8,39 @@ const service = new AuthController();
 class UserController {
   async create(data) {
     try {
-      const user = {
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        role: "user",
-        created_at: new Date(),
-      };
-      let userCreated = await Store.insert(Tabla, user);
+      let search = await Store.query(Tabla, { email: data.email });
+      console.log(search)
+      if (search[0].email != data.email) {
+        const user = {
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          role: "user",
+          created_at: new Date(),
+        };
 
-      const authData = {
-        id: userCreated.id,
-        email: data.email,
-        password: data.password,
-        role: "user",
-        created_at: userCreated.created_at,
-      };
+        let userCreated = await Store.insert(Tabla, user);
 
-      await service.create(authData);
-      return userCreated;
+        const authData = {
+          id: userCreated.id,
+          email: data.email,
+          password: data.password,
+          role: "user",
+          created_at: userCreated.created_at,
+        };
+
+        await service.create(authData);
+        let token = await service.login(data.email, data.password);
+        let tokenJWT = token.token;
+        return {
+          userCreated,
+          tokenJWT,
+        };
+      } else {
+        throw boom.badRequest("El email ya fue registrado");
+      }
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   }
 
