@@ -16,7 +16,7 @@ class UserController {
         created_at: new Date(),
       };
       let userCreated = await Store.insert(Tabla, user);
-      
+
       const authData = {
         id: userCreated.id,
         email: data.email,
@@ -44,10 +44,12 @@ class UserController {
       throw boom.notFound("El usuario que buscas no existe");
     }
   }
-  async update() {}
+  async update(id, data) {
+    let newUserData = await Store.update(Tabla, id, data);
+    return newUserData;
+  }
 
   async remove(id) {
-    let check = await this.findOne(id);
     return await Store.remove(Tabla, id);
   }
 }

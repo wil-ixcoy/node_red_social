@@ -35,7 +35,6 @@ class AuthController{
     }
 
     async  tokenJWT(user) {
-        console.log(user)
         const payload = {
             sub: user.id,
             role: user.role,

@@ -67,15 +67,17 @@ async function insert(table, data) {
   });
 }
 async function update(table, id, data) {
-  return new Promise((resolve, reject) => {
+  return new Promise( (resolve, reject) => {
     connection.query(
       `UPDATE ${table} SET ? WHERE id = ?`,
       [data, id],
-      (err, rows) => {
+      async (err, rows) => {
         if (err) {
-          reject(err);
+          return reject(boom.badData("Ocurrio un error al querer actualizar el usuario"))
         } else {
-          resolve(rows);
+          console.log(rows)
+        let newData = await getOne(table, id);
+        return resolve(newData);
         }
       }
     );
@@ -85,7 +87,7 @@ async function remove(table, id) {
   return new Promise((resolve, reject) => {
     connection.query(`DELETE FROM ${table} WHERE id = ?`, [id], (err, rows) => {
       if (err) {
-        reject(err);
+        return reject(boom.badData("Ocurrio un error al querer eliminar el usuario"))
       } else {
         resolve("Eliminado");
       }
