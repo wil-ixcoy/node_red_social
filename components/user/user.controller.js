@@ -58,7 +58,12 @@ class UserController {
   }
   async update(id, data) {
     let newUserData = await Store.update(Tabla, id, data);
-    return newUserData;
+    if(newUserData != undefined){
+      return newUserData;
+
+    }else{
+      throw boom.notFound("El usuario que se intenta actualizar no existe.")
+    }
   }
 
   async remove(id) {
