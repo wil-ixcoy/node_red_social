@@ -67,17 +67,19 @@ async function insert(table, data) {
   });
 }
 async function update(table, id, data) {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     connection.query(
       `UPDATE ${table} SET ? WHERE id = ?`,
       [data, id],
       async (err, rows) => {
         if (err) {
-          return reject(boom.badData("Ocurrio un error al querer actualizar el usuario"))
+          return reject(
+            boom.badData("Ocurrio un error al querer actualizar el usuario")
+          );
         } else {
-          console.log(rows)
-        let newData = await getOne(table, id);
-        return resolve(newData);
+          console.log(rows);
+          let newData = await getOne(table, id);
+          return resolve(newData);
         }
       }
     );
@@ -87,22 +89,35 @@ async function remove(table, id) {
   return new Promise((resolve, reject) => {
     connection.query(`DELETE FROM ${table} WHERE id = ?`, [id], (err, rows) => {
       if (err) {
-        return reject(boom.badData("Ocurrio un error al querer eliminar el usuario"))
+        return reject(
+          boom.badData("Ocurrio un error al querer eliminar el usuario")
+        );
       } else {
         resolve("Eliminado");
       }
     });
   });
 }
-async function query(table, q) {
+
+async function query(table, q, join) {
+  let joinQuery = "";
+  if (join) {
+    const key = Object.keys(join)[0];
+    const val = join[key];
+    joinQuery = `JOIN ${key} ON ${table}.${val} = ${key}.id`;
+  }
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM ${table} WHERE ?`, q, (err, rows) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(rows);
+    connection.query(
+      `SELECT * FROM ${table} ${joinQuery} WHERE ?`,
+      q,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
       }
-    });
+    );
   });
 }
 

@@ -76,5 +76,13 @@ class UserController {
     });
     return followed;
   }
+
+  async following(id){
+    const join = {};
+    join[Tabla] = "user_to";
+    const query = {user_from: id};
+    const queryResponse = await Store.query(`${Tabla}follow`,query,join)
+    return queryResponse;
+  }
 }
 module.exports = UserController;
