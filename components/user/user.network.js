@@ -59,4 +59,21 @@ router.delete(
     }
   }
 );
+
+router.post(
+  "/follow/:id",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    try {
+      const from = req.body.id;
+      const to = req.params.id;
+      await service.follow(from, to);
+      res.json({
+        message: "siguiendo",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 module.exports = router;

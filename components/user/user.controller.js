@@ -9,7 +9,7 @@ class UserController {
   async create(data) {
     try {
       let search = await Store.query(Tabla, { email: data.email });
-      console.log(search)
+      console.log(search);
       if (search[0].email != data.email) {
         const user = {
           name: data.name,
@@ -58,16 +58,23 @@ class UserController {
   }
   async update(id, data) {
     let newUserData = await Store.update(Tabla, id, data);
-    if(newUserData != undefined){
+    if (newUserData != undefined) {
       return newUserData;
-
-    }else{
-      throw boom.notFound("El usuario que se intenta actualizar no existe.")
+    } else {
+      throw boom.notFound("El usuario que se intenta actualizar no existe.");
     }
   }
 
   async remove(id) {
     return await Store.remove(Tabla, id);
+  }
+
+  async follow(from, to) {
+    const followed = await Store.insert(`${Tabla}follow`, {
+      user_from: from,
+      user_to: to,
+    });
+    return followed;
   }
 }
 module.exports = UserController;

@@ -57,7 +57,7 @@ async function insert(table, data) {
   return new Promise((resolve, reject) => {
     connection.query(`INSERT INTO ${table} SET ?`, data, async (err, rows) => {
       if (err) {
-        return reject(boom.badRequest("Ha sucedido un error"));
+        return reject(boom.badRequest(err.sqlMessage));
       } else {
         let id = rows.insertId;
         let newData = await getOne(table, id);
