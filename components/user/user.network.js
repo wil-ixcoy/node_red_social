@@ -79,7 +79,7 @@ router.post(
   }
 );
 
-router.get("/:id/following", async (req, res, next) => {
+router.get("/following/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const following = await service.following(id);
