@@ -65,7 +65,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      const from = req.body.id;
+      //quien - desde
+      const from = req.body.user_from;
+      // a quien - hacia
       const to = req.params.id;
       await service.follow(from, to);
       res.json({

@@ -34,7 +34,6 @@ class AuthController {
   async tokenJWT(user) {
     const payload = {
       sub: user.id,
-      role: user.role,
     };
     const token = jwt.sign(payload, "pRd4Kq7t9wBzEfH2jLmNpRwTzWuXy1A4");
     return { user, token };

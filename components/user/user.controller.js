@@ -59,7 +59,7 @@ class UserController {
   }
 
   async follow(from, to) {
-    const followed = await Store.insert(`${Tabla}follow`, {
+    const followed = await Store.insert(`user_follow`, {
       user_from: from,
       user_to: to,
     });
@@ -70,7 +70,7 @@ class UserController {
     const join = {};
     join[Tabla] = "user_to";
     const query = { user_from: id };
-    const queryResponse = await Store.query(`${Tabla}follow`, query, join);
+    const queryResponse = await Store.query(`user_follow`, query, join);
     return queryResponse;
   }
 }
