@@ -6,7 +6,7 @@ const { checkRoles } = require("../../middlewares/auth.handler");
 
 const service = new userController();
 
-router.post("/", async (req, res, next) => {
+router.post("/create", async (req, res, next) => {
   try {
     const data = req.body;
     const newUser = await service.create(data);

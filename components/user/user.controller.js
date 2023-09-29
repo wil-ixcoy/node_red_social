@@ -8,37 +8,26 @@ const service = new AuthController();
 class UserController {
   async create(data) {
     try {
-      let search = await Store.query(Tabla, { email: data.email });
-      console.log(search);
-      if (search[0].email != data.email) {
-        const user = {
-          name: data.name,
-          username: data.username,
-          email: data.email,
-          role: "user",
-          created_at: new Date(),
-        };
+      const user = {
+        name: data.name,
+        username: data.username,
+      };
 
-        let userCreated = await Store.insert(Tabla, user);
+      let userCreated = await Store.insert(Tabla, user);
+      console.log(userCreated);
+      const authData = {
+        id: userCreated.id,
+        email: data.email,
+        password: data.password,
+      };
 
-        const authData = {
-          id: userCreated.id,
-          email: data.email,
-          password: data.password,
-          role: "user",
-          created_at: userCreated.created_at,
-        };
-
-        await service.create(authData);
-        let token = await service.login(data.email, data.password);
-        let tokenJWT = token.token;
-        return {
-          userCreated,
-          tokenJWT,
-        };
-      } else {
-        throw boom.badRequest("El email ya fue registrado");
-      }
+      await service.create(authData);
+      let token = await service.login(data.email, data.password);
+      let tokenJWT = token.token;
+      return {
+        userCreated,
+        tokenJWT,
+      };
     } catch (err) {
       throw err;
     }
@@ -77,11 +66,11 @@ class UserController {
     return followed;
   }
 
-  async following(id){
+  async following(id) {
     const join = {};
     join[Tabla] = "user_to";
-    const query = {user_from: id};
-    const queryResponse = await Store.query(`${Tabla}follow`,query,join)
+    const query = { user_from: id };
+    const queryResponse = await Store.query(`${Tabla}follow`, query, join);
     return queryResponse;
   }
 }
