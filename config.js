@@ -8,6 +8,9 @@ const config = {
   usuario: process.env.USUARIO,
   password: process.env.PASSWORD,
   bd: process.env.BD,
+  mysqlService: {
+    port: process.env.MYSQ_LSRV_PORT || 3001
+  }
 };
 
 module.exports = { config };
