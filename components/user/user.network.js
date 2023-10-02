@@ -33,7 +33,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 router.patch(
-  "/:id",
+  "/update/:id",
   passport.authenticate("jwt", { session: false }),
   checkRoles("user"),
   async (req, res, next) => {
@@ -47,7 +47,7 @@ router.patch(
 );
 
 router.delete(
-  "/:id",
+  "/delete/:id",
   passport.authenticate("jwt", { session: false }),
   checkRoles("user"),
   async (req, res, next) => {

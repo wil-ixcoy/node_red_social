@@ -14,7 +14,6 @@ class UserController {
       };
 
       let userCreated = await Store.insert(Tabla, user);
-      console.log(userCreated);
       const authData = {
         id: userCreated.id,
         email: data.email,

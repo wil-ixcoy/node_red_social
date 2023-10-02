@@ -28,12 +28,14 @@ class AuthController {
       throw boom.unauthorized("Contraseña incorrecta");
     }
     const token = await this.tokenJWT(user[0]);
+    
     return token;
   }
 
   async tokenJWT(user) {
     const payload = {
       sub: user.id,
+      role:user.role
     };
     const token = jwt.sign(payload, "pRd4Kq7t9wBzEfH2jLmNpRwTzWuXy1A4");
     return { user, token };
