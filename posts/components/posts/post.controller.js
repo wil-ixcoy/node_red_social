@@ -1,5 +1,5 @@
 const boom = require("@hapi/boom");
-const Store = require("../../store/mysql");
+const Store = require("../../../store/mysql");
 
 const Tabla = "posts";
 
