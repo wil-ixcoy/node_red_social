@@ -34,7 +34,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.patch("/:id", async (req, res, next) => {
+router.patch("/update/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const data = req.body;
@@ -45,7 +45,7 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/delete/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const deletePost = await service.delete(id);

@@ -9,7 +9,8 @@ const config = {
   password: process.env.PASSWORD,
   bd: process.env.BD,
   mysqlService: {
-    port: process.env.MYSQ_LSRV_PORT || 3001
+    port: process.env.MYSQL_SRV_PORT || 3001,
+    host: process.env.MYSQL_SRV_HOST || "localhost"
   }
 };
 
