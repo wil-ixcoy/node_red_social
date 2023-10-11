@@ -8,6 +8,7 @@ const service = new postController();
 router.post("/create", async (req, res, next) => {
   try {
     const data = req.body;
+  
     const post = await service.create(data);
     res.json(post);
   } catch (error) {
