@@ -15,5 +15,5 @@ app.use("/api/posts", post);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 app.listen(config.post.port, () => {
-  console.log("Server is running on port " + config.post.port);
+  console.log("Microservicio de Post corriendo en el puerto " + config.post.port);
 });

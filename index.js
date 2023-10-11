@@ -13,6 +13,6 @@ app.use('/api/auth', auth);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 app.listen(config.port, () => {
-    console.log('Microservicio de Post corriendo en el puerto ' + config.port);
+    console.log('Servidor principal corriendo en el puerto ' + config.port);
 }
 );
