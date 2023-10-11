@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const passport = require("passport");
-const userController = require("./user.controller");
-const { checkRoles } = require("../../middlewares/auth.handler");
+import { Router } from "express";
+const router = Router();
+import { authenticate } from "passport";
+import userController from "./user.controller";
+import { checkRoles } from "../../middlewares/auth.handler";
 
 const service = new userController();
 
@@ -34,7 +34,7 @@ router.get("/:id", async (req, res, next) => {
 });
 router.patch(
   "/update/:id",
-  passport.authenticate("jwt", { session: false }),
+  authenticate("jwt", { session: false }),
   checkRoles("user"),
   async (req, res, next) => {
     try {
@@ -48,7 +48,7 @@ router.patch(
 
 router.delete(
   "/delete/:id",
-  passport.authenticate("jwt", { session: false }),
+  authenticate("jwt", { session: false }),
   checkRoles("user"),
   async (req, res, next) => {
     try {
@@ -62,7 +62,7 @@ router.delete(
 
 router.post(
   "/follow/:id",
-  passport.authenticate("jwt", { session: false }),
+  authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
       //quien - desde
@@ -88,4 +88,4 @@ router.get("/following/:id", async (req, res, next) => {
     next(error);
   }
 });
-module.exports = router;
+export default router;

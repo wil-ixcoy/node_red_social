@@ -1,11 +1,11 @@
-const express = require('express');
+import express, { json } from 'express';
 const app = express();
-const user = require('./components/user/user.network');
-const auth = require('./components/auth/auth.network');
-const { config } = require('./config');
-const { errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
-require('./utils/index');
-app.use(express.json());
+import user from './components/user/user.network';
+import auth from './components/auth/auth.network';
+import { config } from './config';
+import { errorHandler, boomErrorHandler } from './middlewares/error.handler';
+import './utils/index';
+app.use(json());
 
 app.use('/api/users', user);
 app.use('/api/auth', auth);

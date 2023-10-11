@@ -1,14 +1,11 @@
-const express = require("express");
+import express, { json } from "express";
 const app = express();
 
-const post = require("./components/posts/post.network");
-const { config } = require("../config");
-const {
-  errorHandler,
-  boomErrorHandler,
-} = require("../middlewares/error.handler");
-require("../utils/index");
-app.use(express.json());
+import post from "./components/posts/post.network";
+import {config} from "../config";
+import { errorHandler, boomErrorHandler } from "../middlewares/error.handler";
+import "../utils/index";
+app.use(json());
 
 app.use("/api/posts", post);
 

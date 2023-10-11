@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
-const AuthController = require('./auth.controller');
+import AuthController from './auth.controller';
 
 const service = new AuthController();
 router.post("/login", async (req, res, next) => {
@@ -16,4 +16,4 @@ router.post("/login", async (req, res, next) => {
 });
 
 
-module.exports = router;
+export default router;

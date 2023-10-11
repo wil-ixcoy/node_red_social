@@ -1,7 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const passport = require("passport");
-const postController = require("./post.controller");
+import { Router } from "express";
+const router = Router();
+import passport from "passport";
+import postController from "./post.controller";
 
 const service = new postController();
 
@@ -54,4 +54,4 @@ router.delete("/delete/:id", async (req, res, next) => {
     next(error);
   }
 });
-module.exports = router;
+export default router;

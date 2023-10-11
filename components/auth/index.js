@@ -1,4 +1,4 @@
-const Controller = require('./auth.controller');
-const store = require("../../store/mysql");
+import Controller from './auth.controller';
+import store from "../../store/mysql";
 /* se inyecta la base de datos al controlador */
-module.exports = Controller(store);
+export default Controller(store);

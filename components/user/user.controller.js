@@ -1,8 +1,8 @@
 const Tabla = "users";
 /* solo se llama auth y automaticamente usa el index.js */
-const AuthController = require("../auth/auth.controller");
-const boom = require("@hapi/boom");
-const Store = require("../../store/mysql");
+import AuthController from "../auth/auth.controller";
+import { notFound } from "@hapi/boom";
+import { insert, list, getOne, update as _update, remove as _remove, query as _query } from "../../store/mysql";
 
 const service = new AuthController();
 class UserController {
@@ -13,7 +13,7 @@ class UserController {
         username: data.username,
       };
 
-      let userCreated = await Store.insert(Tabla, user);
+      let userCreated = await insert(Tabla, user);
       const authData = {
         id: userCreated.id,
         email: data.email,
@@ -33,32 +33,32 @@ class UserController {
   }
 
   async findAll() {
-    let data = await Store.list(Tabla);
+    let data = await list(Tabla);
     return data;
   }
   async findOne(id) {
-    let user = await Store.getOne(Tabla, id);
+    let user = await getOne(Tabla, id);
     if (user != undefined) {
       return user;
     } else {
-      throw boom.notFound("El usuario que buscas no existe");
+      throw notFound("El usuario que buscas no existe");
     }
   }
   async update(id, data) {
-    let newUserData = await Store.update(Tabla, id, data);
+    let newUserData = await _update(Tabla, id, data);
     if (newUserData != undefined) {
       return newUserData;
     } else {
-      throw boom.notFound("El usuario que se intenta actualizar no existe.");
+      throw notFound("El usuario que se intenta actualizar no existe.");
     }
   }
 
   async remove(id) {
-    return await Store.remove(Tabla, id);
+    return await _remove(Tabla, id);
   }
 
   async follow(from, to) {
-    const followed = await Store.insert(`user_follow`, {
+    const followed = await insert(`user_follow`, {
       user_from: from,
       user_to: to,
     });
@@ -69,8 +69,8 @@ class UserController {
     const join = {};
     join[Tabla] = "user_to";
     const query = { user_from: id };
-    const queryResponse = await Store.query(`user_follow`, query, join);
+    const queryResponse = await _query(`user_follow`, query, join);
     return queryResponse;
   }
 }
-module.exports = UserController;
+export default UserController;

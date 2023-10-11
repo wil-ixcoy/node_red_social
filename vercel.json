@@ -6,22 +6,22 @@
       "use": "@vercel/node"
     },
     {
-      "src": "post/post.index.js",
+      "src": "posts/post.index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/auth(.*)",
-      "dest": "/index.js"
+      "src": "/api/auth(.*)",
+      "dest": "/api/index.js"
     },
     {
-      "src": "/user(.*)",
-      "dest": "/index.js"
+      "src": "/api/user(.*)",
+      "dest": "/api/index.js"
     },
     {
-      "src": "/post(.*)",
-      "dest": "/post/post.index.js"
+      "src": "/api/post(.*)",
+      "dest": "/api/post.index.js"
     }
   ]
 }

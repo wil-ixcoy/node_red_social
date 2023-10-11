@@ -1,4 +1,4 @@
-const Controller = require('./user.controller');
+import Controller from './user.controller';
 //const store = require("../../store/mysql");
-const store = require("../../store/mysql.remote")
-module.exports = Controller(store);
+import store from "../../store/mysql.remote";
+export default Controller(store);

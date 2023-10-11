@@ -1,6 +1,6 @@
 const { Strategy } = require('passport-local');
 
-const auth = require('../../components/auth/auth.controller');
+const auth = require('../../components/auth/auth.controller').default;
 
 const localStrategy = new Strategy(
     {

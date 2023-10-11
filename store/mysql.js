@@ -1,6 +1,6 @@
 const { createPool } = require("mysql2");
 const boom = require("@hapi/boom");
-const { config } = require("../config");
+const { config } = require("../config").default;
 
 const DATABASE_URL = config.mysql_url;
 const ser = config.servidor;
